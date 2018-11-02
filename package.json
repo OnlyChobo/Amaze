@@ -1,0 +1,28 @@
+{
+  "name": "Amaze",
+  "version": "1.0.0",
+  "description": "Maze Solver",
+  "main": "index.js",
+  "scripts": {
+    "webpack": "webpack --watch --mode=development"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OnlyChobo/MazeSolver.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/OnlyChobo/MazeSolver/issues"
+  },
+  "homepage": "https://github.com/OnlyChobo/MazeSolver#readme",
+  "dependencies": {
+    "@babel/core": "^7.1.2",
+    "@babel/preset-env": "^7.1.0",
+    "babel-loader": "^8.0.4",
+    "keymaster": "^1.6.2",
+    "webpack": "^4.23.1",
+    "webpack-cli": "^3.1.2"
+  }
+}
