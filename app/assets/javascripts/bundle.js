@@ -560,7 +560,6 @@ function frame() {
       currPos[1]++;
     }
 
-    if (keymaster__WEBPACK_IMPORTED_MODULE_0___default.a.isPressed('1')) bfs.flood();
     lastFrame = currentFrame;
   }
 
@@ -587,8 +586,10 @@ var lastFrame = new Date();
 requestAnimationFrame(frame);
 var el1 = document.getElementById("newMaze");
 var el2 = document.getElementById("pause");
+var el3 = document.getElementById("bfs");
 if (el1.addEventListener) el1.addEventListener("click", reset, false);
 if (el2.addEventListener) el2.addEventListener("click", pauseResume, false);
+if (el3.addEventListener) el3.addEventListener("click", startBFS, false);
 
 function reset() {
   maze.generateMaze();

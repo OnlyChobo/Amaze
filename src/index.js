@@ -34,7 +34,6 @@ function frame() {
     if (key.isPressed('D') && currPos[1]+1 < w && maze.validMove([currPos[0],currPos[1]+1])) {
       currPos[1] ++;
     }
-    if (key.isPressed('1')) bfs.flood();
     lastFrame = currentFrame;
   }
   renderer.draw();
@@ -58,10 +57,13 @@ requestAnimationFrame(frame);
 
 let el1 = document.getElementById("newMaze");
 let el2 = document.getElementById("pause");
+let el3 = document.getElementById("bfs");
 if (el1.addEventListener)
-    el1.addEventListener("click", reset, false);
+  el1.addEventListener("click", reset, false);
 if (el2.addEventListener)
-    el2.addEventListener("click", pauseResume, false);
+  el2.addEventListener("click", pauseResume, false);
+if (el3.addEventListener)
+  el3.addEventListener("click", startBFS, false);
 
 
 function reset() {
