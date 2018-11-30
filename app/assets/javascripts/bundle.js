@@ -538,7 +538,7 @@ var endPoint = [0, w - 1];
 var currPos = [h - 1, 0];
 var maze = new _maze__WEBPACK_IMPORTED_MODULE_1__["default"](h, w);
 var status = new _status__WEBPACK_IMPORTED_MODULE_5__["default"]();
-var timer = new _timer__WEBPACK_IMPORTED_MODULE_4__["default"](9000);
+var timer = new _timer__WEBPACK_IMPORTED_MODULE_4__["default"](90000);
 var renderer = new _renderer__WEBPACK_IMPORTED_MODULE_3__["default"](maze.matrix, currPos, timer, status);
 var bfs = new _bfs__WEBPACK_IMPORTED_MODULE_2__["default"](maze.matrix, [startPoint]);
 var gameOver = false;
@@ -837,7 +837,7 @@ function () {
     key: "drawComponents",
     value: function drawComponents(ctx, num) {
       ctx.clearRect(10, 10, 990, 490);
-      if (!this.status) this.drawMaze(ctx, num);else if (this.status.getStatus() == 'pause') this.printMessages(ctx, 'PAUSED');else if (this.status.getStatus() == 'new') this.printMessages(ctx, 'NEW');else if (this.status.getStatus() == 'over') this.printMessages(ctx, 'PLAY AGAIN?');else this.drawMaze(ctx, num);
+      if (!this.status) this.drawMaze(ctx, num);else if (this.status.getStatus() == 'pause') this.printMessages(ctx, 'PAUSED');else if (this.status.getStatus() == 'new') this.printMessages(ctx, 'AMAZE');else if (this.status.getStatus() == 'over') this.printMessages(ctx, 'PLAY AGAIN?');else this.drawMaze(ctx, num);
     }
   }, {
     key: "drawMaze",

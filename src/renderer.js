@@ -53,7 +53,7 @@ class Renderer {
     ctx.clearRect(10, 10, 990, 490);
     if (!this.status) this.drawMaze(ctx, num);
     else if (this.status.getStatus() == 'pause') this.printMessages(ctx, 'PAUSED');
-    else if (this.status.getStatus() == 'new') this.printMessages(ctx, 'NEW');
+    else if (this.status.getStatus() == 'new') this.printMessages(ctx, 'AMAZE');
     else if (this.status.getStatus() == 'over') this.printMessages(ctx, 'PLAY AGAIN?');
     else this.drawMaze(ctx, num);
 
