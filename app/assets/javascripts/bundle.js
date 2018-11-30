@@ -436,6 +436,8 @@ function () {
 
         if (this.frontier.length === 0 || this.matrix[0][this.w - 1] !== 'P') {
           this.createPath();
+          document.getElementById("newMaze").disabled = false;
+          document.getElementById("pause").disabled = false;
           return;
         }
 
@@ -455,6 +457,7 @@ function () {
         this.lastFrame = currentFrame;
       }
 
+      console.log('test');
       this.renderer.draw(this.step - 1);
       var nextFlood = this.flood.bind(this);
       requestAnimationFrame(nextFlood);
@@ -521,6 +524,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _bfs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./bfs */ "./src/bfs.js");
 /* harmony import */ var _renderer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./renderer */ "./src/renderer.js");
 /* harmony import */ var _timer__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./timer */ "./src/timer.js");
+/* harmony import */ var _status__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./status */ "./src/status.js");
+
 
 
 
@@ -532,13 +537,12 @@ var startPoint = [h - 1, 0];
 var endPoint = [0, w - 1];
 var currPos = [h - 1, 0];
 var maze = new _maze__WEBPACK_IMPORTED_MODULE_1__["default"](h, w);
-var timer = new _timer__WEBPACK_IMPORTED_MODULE_4__["default"](120000);
-var renderer = new _renderer__WEBPACK_IMPORTED_MODULE_3__["default"](maze.matrix, currPos, timer);
+var status = new _status__WEBPACK_IMPORTED_MODULE_5__["default"]();
+var timer = new _timer__WEBPACK_IMPORTED_MODULE_4__["default"](9000);
+var renderer = new _renderer__WEBPACK_IMPORTED_MODULE_3__["default"](maze.matrix, currPos, timer, status);
 var bfs = new _bfs__WEBPACK_IMPORTED_MODULE_2__["default"](maze.matrix, [startPoint]);
 var gameOver = false;
-maze.generateMaze();
-renderer.draw();
-timer.start();
+renderer.draw(); // timer.start();
 
 function frame() {
   var currentFrame = new Date();
@@ -563,17 +567,18 @@ function frame() {
     lastFrame = currentFrame;
   }
 
-  renderer.draw();
-
   if (currPos[0] === endPoint[0] && currPos[1] === endPoint[1]) {
     console.log('win');
+    status.setStatus('over');
     gameOver = true;
   } else if (timer.time === 0) {
     console.log('game over');
+    status.setStatus('over');
     gameOver = true;
   }
 
   ;
+  renderer.draw();
 
   if (gameOver) {
     return;
@@ -587,22 +592,41 @@ requestAnimationFrame(frame);
 var el1 = document.getElementById("newMaze");
 var el2 = document.getElementById("pause");
 var el3 = document.getElementById("bfs");
+el2.disabled = true;
+el3.disabled = true;
 if (el1.addEventListener) el1.addEventListener("click", reset, false);
 if (el2.addEventListener) el2.addEventListener("click", pauseResume, false);
 if (el3.addEventListener) el3.addEventListener("click", startBFS, false);
 
 function reset() {
+  gameOver = false;
   maze.generateMaze();
+  bfs = new _bfs__WEBPACK_IMPORTED_MODULE_2__["default"](maze.matrix, [startPoint]);
   timer.restart();
+  timer.start();
+  status.setStatus('play');
+  el2.disabled = false;
+  el3.disabled = false;
+  requestAnimationFrame(frame);
 }
 
 function pauseResume() {
-  if (timer.status()) timer.stop();else timer.start();
+  if (status.getStatus() != 'pause') {
+    timer.stop();
+    status.setStatus('pause');
+  } else {
+    timer.start();
+    status.setStatus('play');
+  }
 }
 
 function startBFS() {
+  el1.disabled = true;
+  el2.disabled = true;
+  el3.disabled = true;
   bfs.flood();
   timer.stop();
+  status.setStatus('play');
 }
 
 /***/ }),
@@ -759,7 +783,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 var Renderer =
 /*#__PURE__*/
 function () {
-  function Renderer(matrix, pos, timer) {
+  function Renderer(matrix, pos, timer, status) {
     _classCallCheck(this, Renderer);
 
     this.matrix = matrix;
@@ -767,6 +791,7 @@ function () {
     this.w = matrix[0].length;
     this.pos = pos;
     this.timer = timer;
+    this.status = status;
   }
 
   _createClass(Renderer, [{
@@ -777,14 +802,14 @@ function () {
       var timeLeft = 1;
       if (this.timer) timeLeft = this.timer.time / this.timer.startTime;
       ctx.beginPath();
-      ctx.rect(100, 100, 990, 490);
+      ctx.rect(10, 10, 990, 490);
       ctx.strokeStyle = 'black';
       ctx.lineWidth = 4;
       ctx.stroke();
       ctx.closePath();
       this.drawComponents(ctx, num);
       ctx.beginPath();
-      ctx.rect(99, 600, 992, 40);
+      ctx.rect(9, 510, 992, 40);
       ctx.fillStyle = 'white';
       ctx.fill();
       ctx.strokeStyle = 'black';
@@ -792,7 +817,7 @@ function () {
       ctx.stroke();
       ctx.closePath();
       ctx.beginPath();
-      ctx.rect(100, 601, 990 * timeLeft, 38);
+      ctx.rect(10, 511, 990 * timeLeft, 38);
       ;
       ctx.fillStyle = 'gray';
       ctx.fill();
@@ -803,7 +828,7 @@ function () {
     value: function drawRect(ctx, x, y, color) {
       ctx.beginPath();
       ctx.fillStyle = color;
-      ctx.rect(100 + x * 10, 100 + y * 10, 10, 10);
+      ctx.rect(10 + x * 10, 10 + y * 10, 10, 10);
       ctx.fill();
       ctx.filter = "filter";
       ctx.closePath();
@@ -811,8 +836,8 @@ function () {
   }, {
     key: "drawComponents",
     value: function drawComponents(ctx, num) {
-      ctx.clearRect(100, 100, 990, 490);
-      if (this.timer && !this.timer.status()) this.printMessages(ctx, 'PAUSED');else this.drawMaze(ctx, num);
+      ctx.clearRect(10, 10, 990, 490);
+      if (!this.status) this.drawMaze(ctx, num);else if (this.status.getStatus() == 'pause') this.printMessages(ctx, 'PAUSED');else if (this.status.getStatus() == 'new') this.printMessages(ctx, 'NEW');else if (this.status.getStatus() == 'over') this.printMessages(ctx, 'PLAY AGAIN?');else this.drawMaze(ctx, num);
     }
   }, {
     key: "drawMaze",
@@ -834,7 +859,7 @@ function () {
       ctx.textBaseline = 'middle';
       ctx.textAlign = "center";
       ctx.font = 'bold 24px Roboto';
-      ctx.fillText(message, 595, 345);
+      ctx.fillText(message, 505, 255);
     }
   }]);
 
@@ -842,6 +867,49 @@ function () {
 }();
 
 /* harmony default export */ __webpack_exports__["default"] = (Renderer);
+
+/***/ }),
+
+/***/ "./src/status.js":
+/*!***********************!*\
+  !*** ./src/status.js ***!
+  \***********************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Status =
+/*#__PURE__*/
+function () {
+  function Status() {
+    _classCallCheck(this, Status);
+
+    this.s = 'new';
+  }
+
+  _createClass(Status, [{
+    key: "setStatus",
+    value: function setStatus(status) {
+      this.s = status;
+    }
+  }, {
+    key: "getStatus",
+    value: function getStatus() {
+      return this.s;
+    }
+  }]);
+
+  return Status;
+}();
+
+/* harmony default export */ __webpack_exports__["default"] = (Status);
 
 /***/ }),
 
@@ -869,6 +937,7 @@ function () {
     this.startTime = time;
     this.time = time;
     this.timer = null;
+    this.clearTime = null;
   }
 
   _createClass(Timer, [{
@@ -879,13 +948,14 @@ function () {
       this.timer = setInterval(function () {
         _this.time -= 100;
       }, 100);
-      setTimeout(function () {
+      this.clearTime = setTimeout(function () {
         clearInterval(_this.timer);
       }, this.time);
     }
   }, {
     key: "restart",
     value: function restart() {
+      this.stop();
       this.time = this.startTime;
     }
   }, {
@@ -893,6 +963,7 @@ function () {
     value: function stop() {
       if (this.timer) {
         clearInterval(this.timer);
+        clearTimeout(this.clearTime);
         this.timer = null;
       }
     }

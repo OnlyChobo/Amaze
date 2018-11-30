@@ -1,12 +1,13 @@
 import Timer from './timer';
 
 class Renderer {
-  constructor (matrix, pos, timer) {
+  constructor (matrix, pos, timer, status) {
     this.matrix = matrix;
     this.h = matrix.length;
     this.w = matrix[0].length;
     this.pos = pos;
     this.timer = timer;
+    this.status = status;
   }
 
   draw(num) {
@@ -16,7 +17,7 @@ class Renderer {
     if (this.timer) timeLeft = this.timer.time / this.timer.startTime;
 
     ctx.beginPath();
-    ctx.rect(100, 100, 990, 490);
+    ctx.rect(10, 10, 990, 490);
     ctx.strokeStyle = 'black';
     ctx.lineWidth = 4;
     ctx.stroke();
@@ -24,7 +25,7 @@ class Renderer {
     this.drawComponents(ctx, num);
 
     ctx.beginPath();
-    ctx.rect(99, 600, 992, 40);
+    ctx.rect(9, 510, 992, 40);
     ctx.fillStyle ='white';
     ctx.fill();
     ctx.strokeStyle = 'black';
@@ -33,7 +34,7 @@ class Renderer {
     ctx.closePath();
 
     ctx.beginPath();
-    ctx.rect(100, 601, 990 * timeLeft, 38);;
+    ctx.rect(10, 511, 990 * timeLeft, 38);;
     ctx.fillStyle = 'gray';
     ctx.fill();
     ctx.closePath();
@@ -42,15 +43,18 @@ class Renderer {
   drawRect(ctx, x, y, color) {
     ctx.beginPath();
     ctx.fillStyle = color;
-    ctx.rect(100+x*10, 100+y*10, 10, 10);
+    ctx.rect(10+x*10, 10+y*10, 10, 10);
     ctx.fill();
     ctx.filter = "filter";
     ctx.closePath();
   }
 
   drawComponents(ctx, num) {
-    ctx.clearRect(100, 100, 990, 490);
-    if (this.timer && !this.timer.status()) this.printMessages(ctx, 'PAUSED');
+    ctx.clearRect(10, 10, 990, 490);
+    if (!this.status) this.drawMaze(ctx, num);
+    else if (this.status.getStatus() == 'pause') this.printMessages(ctx, 'PAUSED');
+    else if (this.status.getStatus() == 'new') this.printMessages(ctx, 'NEW');
+    else if (this.status.getStatus() == 'over') this.printMessages(ctx, 'PLAY AGAIN?');
     else this.drawMaze(ctx, num);
 
   }
@@ -75,7 +79,7 @@ class Renderer {
     ctx.textBaseline = 'middle';
     ctx.textAlign = "center";
     ctx.font = 'bold 24px Roboto';
-    ctx.fillText(message, 595, 345);
+    ctx.fillText(message, 505, 255);
   }
 
 }

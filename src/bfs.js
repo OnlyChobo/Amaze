@@ -17,6 +17,8 @@ class BFS {
       const newFrontier = [];
       if (this.frontier.length === 0 || this.matrix[0][this.w-1] !== 'P') {
         this.createPath();
+        document.getElementById("newMaze").disabled = false;
+        document.getElementById("pause").disabled = false;
         return;
       }
       
@@ -34,7 +36,7 @@ class BFS {
       this.frontier = newFrontier;
       this.lastFrame = currentFrame;
     }
-    
+    console.log('test');
     this.renderer.draw(this.step-1);
     let nextFlood = this.flood.bind(this);
     requestAnimationFrame(nextFlood);

@@ -1,9 +1,22 @@
 <html> 
-  <body>
-  <button id='newMaze'>New Maze</button>
-  <button id='pause'>Pause</button>
-  <button id='bfs'>BFS</button>
-  <canvas width="1100" height="1000" id="canvas"></canvas> 
-  <script src="app/assets/javascripts/bundle.js"></script>
+  <body class='container'>
+    <div class='main'>
+      <div class='instructions'>
+        <h2>Instructions</h2>
+        <p>Start bottom left and your goal is to reach top left before the time runs out!</p>
+        <h2>Controls</h2>
+        <img src='./wasd.jpg' width="180px" />
+      </div>
+      <div>
+          <div class='nav'>
+              <button id='newMaze'>New Maze</button>
+              <button id='pause'>Pause</button>
+              <button id='bfs'>I Give Up!</button>
+            </div>
+        <canvas width="1010" height="560" id="canvas"></canvas>
+      </div>
+    </div>
+    <script src="app/assets/javascripts/bundle.js"></script>
+    <link rel="stylesheet" href="stylesheets/application.css">
   </body> 
 </html> 
