@@ -1,4 +1,4 @@
-# Maze Solver
+# Amaze
 
 [Live Link](https://OnlyChobo.github.io/Amaze/)
 
@@ -13,7 +13,7 @@ Maze will be randomly generated. User will have a total of 90 seconds to navigat
 
 <img src="./images/ss1.png" width="600px">
 
-### Maze Solver
+### Optimal Path
 
 BFS is used to solve the maze.
 
