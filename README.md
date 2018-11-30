@@ -16,4 +16,5 @@ Maze will be randomly generated. User will have a total of 90 seconds to navigat
 ### Maze Solver
 
 BFS is used to solve the maze.
+
 <img src="./images/ss2.png" width="600px">
